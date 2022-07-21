@@ -44,4 +44,14 @@ public class Coupon {
     public void setExpDate(String expDate) {
         this.expDate = expDate;
     }
+
+    @Override
+    public String toString() {
+        return "Coupon{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", discount=" + discount +
+                ", expDate='" + expDate + '\'' +
+                '}';
+    }
 }

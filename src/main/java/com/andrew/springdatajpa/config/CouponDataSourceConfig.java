@@ -9,14 +9,20 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
+@EnableTransactionManagement
+@EnableJpaRepositories(entityManagerFactoryRef = "couponEntityManagerFactory",
+transactionManagerRef = "couponTransactionManager", basePackages = {
+        "com.andrew.springdatajpa" })
 public class CouponDataSourceConfig {
 
     @Primary
@@ -25,7 +31,7 @@ public class CouponDataSourceConfig {
     public DataSourceProperties couponDataSourceProperties(){
         return new DataSourceProperties();
     }
-
+    @Primary
     @Bean(name = "couponDataSource")
     public DataSource couponDataSource() {
         return couponDataSourceProperties().initializeDataSourceBuilder()
@@ -40,7 +46,8 @@ public class CouponDataSourceConfig {
 
     @Primary
     @Bean(name = "couponTransactionManager")
-    public PlatformTransactionManager couponTransactionManager(@Qualifier("couponEntityManagerFactory") EntityManagerFactory couponEntityManagerFactory) {
+    public PlatformTransactionManager couponTransactionManager(
+            @Qualifier("couponEntityManagerFactory") EntityManagerFactory couponEntityManagerFactory) {
         return new JpaTransactionManager(couponEntityManagerFactory);
     }
 
